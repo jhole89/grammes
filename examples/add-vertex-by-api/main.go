@@ -83,7 +83,7 @@ func main() {
 	logger.Info("Number of Vertices Before", zap.Int64("count", count))
 
 	// Read the request example JSON from the assets/ folder.
-	api, err := prepareAPI("assets/test/request.json")
+	api, err := prepareAPI("../../assets/test/request.json")
 	if err != nil {
 		logger.Fatal("Failed to prepare API Json", zap.Error(err))
 	}
@@ -96,7 +96,6 @@ func main() {
 
 	// Print out the vertex struct of the added vertex.
 	logger.Sugar().Infow("Resulting Vertex",
-		"Label", vertex.Label(),
 		"ID", vertex.ID(),
 		"Label", vertex.Label(),
 	)
