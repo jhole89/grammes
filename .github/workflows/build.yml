@@ -144,12 +144,6 @@ jobs:
         if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
-      - name: util-example
-        working-directory: examples/exampleutil
-        id: util-example
-        if: ${{ always() }}
-        run: go run main.go -h ws://127.0.0.1:8182
-
       - name: execute-bound-query-example
         working-directory: examples/execute-bound-query
         id: execute-bound-query-example

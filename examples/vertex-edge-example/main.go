@@ -96,11 +96,11 @@ func printEdges(client *grammes.Client, edges []grammes.Edge) {
 	if len(edges) > 0 {
 		// Get the vertices based on the edge's
 		// stored ID's about its related vertices.
-		v1, err := edges[0].QueryOutVertex(client)
+		_, err := edges[0].QueryOutVertex(client)
 		if err != nil {
 			logger.Fatal("Error while querying for outer vertices", zap.Error(err))
 		}
-		v2, err := edges[0].QueryInVertex(client)
+		_, err = edges[0].QueryInVertex(client)
 		if err != nil {
 			logger.Fatal("Error while querying for outer vertices", zap.Error(err))
 		}
@@ -125,13 +125,11 @@ func printEdges(client *grammes.Client, edges []grammes.Edge) {
 		logger.Info("OutVertex",
 			zap.Any("ID", edges[0].OutVertexID()),
 			zap.String("Label", edges[0].OutVertexLabel()),
-			zap.Any("Name", v1.PropertyValue("name", 0)),
 		)
 
 		logger.Info("InVertex",
 			zap.Any("ID", edges[0].InVertexID()),
 			zap.String("Label", edges[0].InVertexLabel()),
-			zap.Any("Name", v2.PropertyValue("name", 0)),
 		)
 	}
 }

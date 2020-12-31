@@ -74,9 +74,8 @@ func main() {
 		logger.Fatal("Error getting vertex", zap.Error(err))
 	}
 
-	logger.Info("Added Properties",
-		zap.String("label", vertex.Value.Label),
-		zap.String("first", vertex.PropertyValue("first", 0).(string)),
-		zap.String("last", vertex.PropertyValue("last", 0).(string)),
+	logger.Info("Added Properties to vertex",
+		zap.Any("ID", vertex.ID()),
+		zap.String("Label", vertex.Label()),
 	)
 }

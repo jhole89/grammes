@@ -41,7 +41,7 @@ func TestPropertyValue(t *testing.T) {
 
 func TestID(t *testing.T) {
 	Convey("Given a variable that represents the Edge struct", t, func() {
-		e := Edge{Type: "tesType", Value: EdgeValue{ID: "testRelID"}}
+		e := Edge{Type: "tesType", Value: EdgeValue{ID: ID{Type: "testIdType", Value: "testRelID"}}}
 
 		Convey("When 'ID' is called", func() {
 			result := e.ID()
@@ -70,7 +70,7 @@ func TestOutVertexID(t *testing.T) {
 	Convey("Given a variable that represents the Edge struct", t, func() {
 		// erid := EdgeRelationID{RelationID: "testRelID"}
 		// ev := EdgeValue{ID: EdgeID{Value: erid}}
-		e := Edge{Type: "tesType", Value: EdgeValue{OutV: 12345}}
+		e := Edge{Type: "tesType", Value: EdgeValue{OutV: ID{Type: "g.Int", Value: 12345}}}
 
 		Convey("When 'OutVertexID' is called", func() {
 			result := e.OutVertexID()
@@ -83,7 +83,7 @@ func TestOutVertexID(t *testing.T) {
 
 func TestInVertexID(t *testing.T) {
 	Convey("Given a variable that represents the Edge struct", t, func() {
-		e := Edge{Type: "tesType", Value: EdgeValue{InV: 54321}}
+		e := Edge{Type: "tesType", Value: EdgeValue{InV: ID{Type: "g.Int", Value: 54321}}}
 
 		Convey("When 'InVertexID' is called", func() {
 			result := e.InVertexID()
@@ -124,7 +124,7 @@ func TestInVertexLabel(t *testing.T) {
 
 func TestQueryOutVertex(t *testing.T) {
 	Convey("Given a variable that represents the Edge struct", t, func() {
-		e := Edge{Type: "tesType", Value: EdgeValue{OutV: 12345}}
+		e := Edge{Type: "tesType", Value: EdgeValue{OutV: ID{Type: "g.Int", Value: 12345}}}
 
 		Convey("When 'QueryOutVertex' is called with a string", func() {
 			var client queryClient
@@ -139,7 +139,7 @@ func TestQueryOutVertex(t *testing.T) {
 
 func TestQueryInVertex(t *testing.T) {
 	Convey("Given a variable that represents the Edge struct", t, func() {
-		e := Edge{Type: "tesType", Value: EdgeValue{OutV: 12345}}
+		e := Edge{Type: "tesType", Value: EdgeValue{OutV: ID{Type: "g.Int", Value: 12345}}}
 
 		Convey("When 'QueryInVertex' is called with a string", func() {
 			var client queryClient

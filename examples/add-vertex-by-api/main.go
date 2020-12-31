@@ -83,7 +83,7 @@ func main() {
 	logger.Info("Number of Vertices Before", zap.Int64("count", count))
 
 	// Read the request example JSON from the assets/ folder.
-	api, err := prepareAPI("../../assets/test/request.json")
+	api, err := prepareAPI("assets/test/request.json")
 	if err != nil {
 		logger.Fatal("Failed to prepare API Json", zap.Error(err))
 	}
@@ -98,7 +98,7 @@ func main() {
 	logger.Sugar().Infow("Resulting Vertex",
 		"Label", vertex.Label(),
 		"ID", vertex.ID(),
-		"NAME_TXT", vertex.PropertyValue("NAME_TXT", 0),
+		"Label", vertex.Label(),
 	)
 
 	// Show the final vertex count.
