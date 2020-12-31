@@ -96,9 +96,8 @@ func main() {
 
 	// Print out the vertex struct of the added vertex.
 	logger.Sugar().Infow("Resulting Vertex",
-		"Label", vertex.Label(),
 		"ID", vertex.ID(),
-		"NAME_TXT", vertex.PropertyValue("NAME_TXT", 0),
+		"Label", vertex.Label(),
 	)
 
 	// Show the final vertex count.

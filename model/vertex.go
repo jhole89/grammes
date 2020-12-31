@@ -77,7 +77,7 @@ func (v *Vertex) PropertyMap() PropertyMap {
 // ID will retrieve the Vertex ID for you
 // without having to traverse all the way through the structures.
 func (v *Vertex) ID() interface{} {
-	return v.Value.ID
+	return v.Value.ID.Value
 }
 
 // Label retrieves the label of the vertex

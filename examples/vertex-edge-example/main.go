@@ -96,11 +96,11 @@ func printEdges(client *grammes.Client, edges []grammes.Edge) {
 	if len(edges) > 0 {
 		// Get the vertices based on the edge's
 		// stored ID's about its related vertices.
-		v1, err := edges[0].QueryOutVertex(client)
+		_, err := edges[0].QueryOutVertex(client)
 		if err != nil {
 			logger.Fatal("Error while querying for outer vertices", zap.Error(err))
 		}
-		v2, err := edges[0].QueryInVertex(client)
+		_, err = edges[0].QueryInVertex(client)
 		if err != nil {
 			logger.Fatal("Error while querying for outer vertices", zap.Error(err))
 		}
@@ -114,24 +114,22 @@ func printEdges(client *grammes.Client, edges []grammes.Edge) {
 		}
 		// Print the information about the edge including
 		// its ID, label, and its properties.
-	
+
 		logger.Info("Edge",
 			zap.Any("ID", edges[0].ID()),
 			zap.String("Label", edges[0].Label()),
 			zap.Any("ageDiff", edges[0].PropertyValue("ageDiff")),
 			zap.Any("driveDist", edges[0].PropertyValue("driveDist")),
 		)
-	
+
 		logger.Info("OutVertex",
 			zap.Any("ID", edges[0].OutVertexID()),
 			zap.String("Label", edges[0].OutVertexLabel()),
-			zap.Any("Name", v1.PropertyValue("name", 0)),
 		)
-	
+
 		logger.Info("InVertex",
 			zap.Any("ID", edges[0].InVertexID()),
 			zap.String("Label", edges[0].InVertexLabel()),
-			zap.Any("Name", v2.PropertyValue("name", 0)),
 		)
 	}
 }

@@ -2,49 +2,294 @@ name: Build
 on: [push, pull_request]
 jobs:
 
-  test:
-    # new service with volumes.
-    # save coverage in volume.
-    name: Unit Tests
+  quality-check:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: [ '1.12', '1.13', '1.14', '1.15' ]
+    name: Go ${{ matrix.go }} Quality Checks
 
     steps:
-    
-    - name: Set up Go 1.12
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.12
-      id: go
-      
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
 
-    - name: Test
-      run: go test -v ./...
+      - name: fmt
+        id: go-fmt
+        run: go fmt ./...
+
+      - name: vet
+        id: go-vet
+        run: go vet ./...
+
+      - name: build
+        id: go-build
+        run: go build -v .
+
+  unit-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: [ '1.12', '1.13', '1.14', '1.15' ]
+    name: Go ${{ matrix.go }} Unit Tests
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Test
+        id: test
+        run: go test -v ./...
       
       # TODO add codecov.io
 
-  build:
-    name: Build
+  integration-test:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        go: [ '1.15' ]
+    name: Go ${{ matrix.go }} Integration Tests
+
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
 
-    - name: Set up Go 1.12
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.12
-      id: go
+      - name: setup-gremlin
+        id: setup
+        run: docker run -d -p 8182:8182 tinkerpop/gremlin-server
 
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
+      - name: add-vertex
+        working-directory: examples/add-vertex
+        id: add-vertex-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
 
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
+      - name: add-vertex-by-api
+        working-directory: examples/add-vertex-by-api
+        id: add-vertex-by-api-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
 
-    - name: Build
-      run: go build -v .
+      - name: add-vertex-by-query
+        working-directory: examples/add-vertex-by-query
+        id: add-vertex-by-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: add-vertex-by-string
+        working-directory: examples/add-vertex-by-string
+        id: add-vertex-by-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: add-vertex-by-struct
+        working-directory: examples/add-vertex-by-struct
+        id: add-vertex-by-struct-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: all-vertices
+        working-directory: examples/all-vertices
+        id: all-vertices-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: auth-example
+        working-directory: examples/auth-example
+        id: auth-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: concurrent-example
+        working-directory: examples/concurrent-example
+        id: concurrent-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: drop-all-example
+        working-directory: examples/drop-all
+        id: drop-all-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: drop-vertex-by-id-example
+        working-directory: examples/drop-vertex-by-id
+        id: drop-vertex-by-id-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: drop-vertex-by-query-example
+        working-directory: examples/drop-vertex-by-query
+        id: drop-vertex-by-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: drop-vertex-by-string-example
+        working-directory: examples/drop-vertex-by-string
+        id: drop-vertex-by-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: drop-vertex-label-example
+        working-directory: examples/drop-vertex-label
+        id: drop-vertex-label-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: execute-bound-query-example
+        working-directory: examples/execute-bound-query
+        id: execute-bound-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: execute-bound-string-example
+        working-directory: examples/execute-bound-string
+        id: execute-bound-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: execute-query-example
+        working-directory: examples/execute-query
+        id: execute-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: execute-string-example
+        working-directory: examples/execute-string
+        id: execute-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: id-by-label-example
+        working-directory: examples/id-by-label
+        id: id-by-label-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: id-by-property-example
+        working-directory: examples/id-by-property
+        id: id-by-property-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: id-by-query-example
+        working-directory: examples/id-by-query
+        id: id-by-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: id-by-string-example
+        working-directory: examples/id-by-string
+        id: id-by-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: logger-example
+        working-directory: examples/logger-example
+        id: logger-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: predicate-example
+        working-directory: examples/predicate-example
+        id: predicate-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-api-example
+        working-directory: examples/quick/api-example
+        id: quick-api-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-find-vertices-example
+        working-directory: examples/quick/find-vertices-example
+        id: quick-find-vertices-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-get-vertices-example
+        working-directory: examples/quick/quick-get-vertices-example
+        id: quick-get-vertices-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-newlogger-example
+        working-directory: examples/quick/quick-newlogger-example
+        id: quick-newlogger-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-property-example
+        working-directory: examples/quick/quick-property-example
+        id: quick-property-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: quick-string-queries-example
+        working-directory: examples/quick/quick-string-queries-example
+        id: quick-string-queries-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: set-vertex-property-example
+        working-directory: examples/set-vertex-property
+        id: set-vertex-property-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertex-by-id-example
+        working-directory: examples/vertex-by-id
+        id: vertex-by-id-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertex-count-example
+        working-directory: examples/vertex-count
+        id: vertex-count-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertex-edge-example
+        working-directory: examples/vertex-edge-example
+        id: vertex-edge-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertex-properties-example
+        working-directory: examples/vertex-properties-example
+        id: vertex-properties-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertices-by-label-example
+        working-directory: examples/vertices-by-label
+        id: vertices-by-label-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertices-by-property-example
+        working-directory: examples/vertices-by-property
+        id: vertices-by-property-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertices-by-query-example
+        working-directory: examples/vertices-by-query
+        id: vertices-by-query-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182
+
+      - name: vertices-by-string-example
+        working-directory: examples/vertices-by-string
+        id: vertices-by-string-example
+        if: ${{ always() }}
+        run: go run main.go -h ws://127.0.0.1:8182

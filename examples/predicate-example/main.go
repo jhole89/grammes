@@ -79,7 +79,10 @@ func main() {
 	// Print out all the vertices that were retrieved.
 	// This should be 2 prints.
 	for _, v := range vertices {
-		logger.Info("Vertex", zap.Any("Age", v.PropertyValue("age", 0)))
+		logger.Info("Vertex",
+			zap.Any("ID", v.ID()),
+			zap.Any("Label", v.Label()),
+		)
 	}
 
 	client.DropAll()

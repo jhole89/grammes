@@ -68,8 +68,8 @@ func main() {
 
 	// Log out the data retrieved.
 	logger.Info("Vertex", zap.Any("id", damienV.ID()))
-	logger.Info("Vertex", zap.Any("name", damienV.PropertyValue("name", 0)))
+	logger.Info("Vertex", zap.Any("label", damienV.Label()))
 
 	logger.Info("Vertex", zap.Any("id", bahramV.ID()))
-	logger.Info("Vertex", zap.Any("name", bahramV.PropertyValue("name", 0)))
+	logger.Info("Vertex", zap.Any("label", bahramV.Label()))
 }

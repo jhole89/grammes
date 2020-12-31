@@ -71,9 +71,8 @@ func main() {
 
 	// Print out the new vertex struct and its properties.
 	logger.Info("Added vertex",
-		zap.Any("firstname", vertex.PropertyValue("firstname", 0)),
-		zap.Any("lastname", vertex.PropertyValue("lastname", 0)),
-		zap.Any("age", vertex.PropertyValue("age", 0)),
+		zap.Any("id", vertex.ID()),
+		zap.Any("label", vertex.Label()),
 	)
 
 	// Count the vertices on the graph.

@@ -75,7 +75,7 @@ func main() {
 		logger.Info("gathered vertex",
 			zap.String("label", vertex.Label()),
 			zap.Any("id", vertex.ID()),
-			zap.Any("name", vertex.PropertyValue("name", 0)),
+			zap.Any("label", vertex.Label()),
 		)
 	}
 }
