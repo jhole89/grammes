@@ -296,6 +296,6 @@ jobs:
 
       - name: vertices-by-string-example
         working-directory: examples/vertices-by-string
-        id: vertices-by-query-example
+        id: vertices-by-string-example
         if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
