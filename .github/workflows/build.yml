@@ -21,9 +21,12 @@ jobs:
         run: go fmt ./...
 
       - name: vet
-        working-directory: app
         id: go-vet
         run: go vet ./...
+
+      - name: build
+        id: go-build
+        run: go build -v .
 
   unit-test:
     runs-on: ubuntu-latest
@@ -59,83 +62,46 @@ jobs:
         with:
           go-version: ${{ matrix.go }}
 
+      - name: setup-gremlin
+        id: setup
+        run: docker run -d -p 8182:8182 tinkerpop/gremlin-server
+
       - name: add-vertex
         working-directory: examples/add-vertex
         id: add-vertex-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-api
         working-directory: examples/add-vertex-by-api
         id: add-vertex-by-api-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-query
         working-directory: examples/add-vertex-by-query
         id: add-vertex-by-query-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-string
         working-directory: examples/add-vertex-by-string
         id: add-vertex-by-string-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-struct
         working-directory: examples/add-vertex-by-struct
         id: add-vertex-by-struct-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: all-vertices
         working-directory: examples/all-vertices
         id: all-vertices-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: auth-example
         working-directory: examples/auth-example
         id: auth-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
+        run: go run main.go -h ws://127.0.0.1:8182
 
       - name: vertex-properties-example
         working-directory: examples/vertex-properties-example
         id: vertex-properties-example
-        run: |
-          docker run -d -p 8182:8182 tinkerpop/gremlin-server
-          go run main.go -h ws://127.0.0.1:8182
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-
-    - name: Set up Go 1.12
-      uses: actions/setup-go@v1
-      with:
-        go-version: 1.12
-      id: go
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
-
-    - name: Get dependencies
-      run: |
-        go get -v -t -d ./...
-        if [ -f Gopkg.toml ]; then
-            curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
-            dep ensure
-        fi
-
-    - name: Build
-      run: go build -v .
+        run: go run main.go -h ws://127.0.0.1:8182
