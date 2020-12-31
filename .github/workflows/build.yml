@@ -53,7 +53,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        go: [ '1.12', '1.13', '1.14', '1.15' ]
+        go: [ '1.15' ]
     name: Go ${{ matrix.go }} Integration Tests
 
     steps:
@@ -69,39 +69,47 @@ jobs:
       - name: add-vertex
         working-directory: examples/add-vertex
         id: add-vertex-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-api
         working-directory: examples/add-vertex-by-api
         id: add-vertex-by-api-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-query
         working-directory: examples/add-vertex-by-query
         id: add-vertex-by-query-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-string
         working-directory: examples/add-vertex-by-string
         id: add-vertex-by-string-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: add-vertex-by-struct
         working-directory: examples/add-vertex-by-struct
         id: add-vertex-by-struct-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: all-vertices
         working-directory: examples/all-vertices
         id: all-vertices-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: auth-example
         working-directory: examples/auth-example
         id: auth-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
 
       - name: vertex-properties-example
         working-directory: examples/vertex-properties-example
         id: vertex-properties-example
+        if: ${{ always() }}
         run: go run main.go -h ws://127.0.0.1:8182
