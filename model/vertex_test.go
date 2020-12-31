@@ -52,7 +52,7 @@ func TestVertexID(t *testing.T) {
 		pi := Property{Type: "piType", Value: PropertyValue{ID: testID, Value: testValue, Label: "tstLabel"}}
 		pdmap := map[string][]Property{"testKey": {pi}}
 
-		v := Vertex{Type: "tesType", Value: VertexValue{Properties: pdmap, ID: 6789}}
+		v := Vertex{Type: "tesType", Value: VertexValue{Properties: pdmap, ID: ID{Type: "testIdType", Value: 6789}}}
 
 		Convey("When 'ID' is called with a string and int", func() {
 			result := v.ID()
@@ -70,7 +70,7 @@ func TestVertexLabel(t *testing.T) {
 		pi := Property{Type: "piType", Value: PropertyValue{ID: testID, Value: testValue, Label: "tstLabel"}}
 		pdmap := map[string][]Property{"testKey": {pi}}
 
-		v := Vertex{Type: "tesType", Value: VertexValue{Label: "testLabel", ID: 6789, Properties: pdmap}}
+		v := Vertex{Type: "tesType", Value: VertexValue{Label: "testLabel", ID: ID{Type: "testIdType", Value: 6789}, Properties: pdmap}}
 
 		Convey("When 'Label' is called with a string and int", func() {
 			result := v.Label()

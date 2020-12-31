@@ -85,7 +85,7 @@ func main() {
 
 	// Execute a query to get the properties from testing vertex.
 	res, err := client.ExecuteQuery(
-		g.V().HasLabel("person").Properties(),
+		g.V(vert.ID()).Properties(),
 	)
 	if err != nil {
 		logger.Fatal("Querying error", zap.Error(err))
